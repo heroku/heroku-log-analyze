@@ -10,12 +10,14 @@ class Heroku::Command::Logs < Heroku::Command::Base
     puts "Receiving log data. Please wait for first report."
 
     @start = get_current_time
-    @store = Hash.new { |h,k| h[k] = {
-      :connect => [],
-      :service => [],
-      :status => Hash.new { |h1,k1| h1[k1] = 0 },
-      :errors => Hash.new { |h1,k1| h1[k1] = 0 }
-    } }
+    @store = Hash.new do |h,k|
+      h[k] = {
+        :connect => [],
+        :service => [],
+        :status => Hash.new { |h1,k1| h1[k1] = 0 },
+        :errors => Hash.new { |h1,k1| h1[k1] = 0 }
+      }
+    end
 
     Thread.new do
       begin
