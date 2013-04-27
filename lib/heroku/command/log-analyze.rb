@@ -11,10 +11,10 @@ class Heroku::Command::Logs < Heroku::Command::Base
 
     @start = get_current_time
     @store = Hash.new { |h,k| h[k] = {
-      connect: [],
-      service: [],
-      status: Hash.new { |h1,k1| h1[k1] = 0 },
-      errors: Hash.new { |h1,k1| h1[k1] = 0 }
+      :connect => [],
+      :service => [],
+      :status => Hash.new { |h1,k1| h1[k1] = 0 },
+      :errors => Hash.new { |h1,k1| h1[k1] = 0 }
     } }
 
     Thread.new do
@@ -104,9 +104,9 @@ private
     aggregated = @store.values.inject do |a, b|
       h = {
         #connect: a[:connect] + b[:connect],
-        service: a[:service] + b[:service],
-        status: a[:status].dup,
-        errors: a[:errors].dup
+        :service => a[:service] + b[:service],
+        :status => a[:status].dup,
+        :errors => a[:errors].dup
       }
       b[:status].each { |k,v| h[:status][k] += v }
       b[:errors].each { |k,v| h[:errors][k] += v }
@@ -133,11 +133,9 @@ private
   end
 
   def get_current_time
-    Time.iso8601(
-      Net::HTTP.new("utc.herokuapp.com", 80).request(
-        Net::HTTP::Get.new('/').tap { |req| req['Accept'] = 'text/plain' }
-      ).body
-    )
+    request = Net::HTTP::Get.new('/')
+    request['Accept'] = 'text/plain'
+    Time.iso8601(Net::HTTP.new("utc.herokuapp.com", 80).request(request).body)
   end
 
   def print(stuff)
