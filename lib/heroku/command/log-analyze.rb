@@ -93,7 +93,7 @@ private
 
   def store_log_data(time, dyno, connect, service, status, error)
     t = (time - @start).round
-    return if t < 0
+    return if t < 0 || dyno.nil?
     #@store[t][:connect] << connect
     Thread.exclusive do
       @store[t][:service] << service
