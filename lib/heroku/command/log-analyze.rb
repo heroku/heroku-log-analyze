@@ -50,6 +50,7 @@ class Heroku::Command::Logs < Heroku::Command::Base
   rescue Interrupt
     # dont print anything on Interrupt
   end
+  alias_method :analyse, :analyze
 
 private
 
